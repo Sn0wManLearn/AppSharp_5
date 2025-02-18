@@ -6,8 +6,9 @@ internal interface ICalc
 {
     event EventHandler<EventArgs> GotResult;
 
-    int Sum(int value);
-    int Substruct(int value);
-    int Multiplay(int value);
-    int Divide(int value);
+    void Sum(int value);
+    void Substruct(int value);
+    void Multiplay(int value);
+    void Divide(int value);
+    void CancelList();
 }

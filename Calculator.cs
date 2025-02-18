@@ -1,3 +1,5 @@
+using System.Security.Cryptography.X509Certificates;
+
 namespace AppSharp_5;
 
 internal class Calculator : ICalc
@@ -5,37 +7,55 @@ internal class Calculator : ICalc
     public event EventHandler<EventArgs> GotResult;
 
     public int Result = 0;
-    public int Sum(int value)
+
+    public Stack<int> Results { get; private set; } = new Stack<int>();
+
+    private void ShowAndSaveResult()
+    {
+        Results.Push(Result);
+        RaiseEvent();
+    }
+    public void Sum(int value)
     {
         Result += value;
-        RaiseEvent();
-        return Result;
+        ShowAndSaveResult();
     }
 
-    public int Substruct(int value)
+    public void Substruct(int value)
     {
         Result -= value;
-        RaiseEvent();
-        return Result;
+        ShowAndSaveResult();
     }
 
-    public int Multiplay(int value)
+    public void Multiplay(int value)
     {
         Result *= value;
-        RaiseEvent();
-        return Result;
+        ShowAndSaveResult();
     }
 
-    public int Divide(int value)
+    public void Divide(int value)
     {
-        Result /= value;
-        RaiseEvent();
-        return Result;
+        if (value != 0)
+        {
+            Result /= value;
+            ShowAndSaveResult();
+        }
+        else Console.WriteLine("Делить на ноль нельзя!");
     }
 
     public void RaiseEvent()
     {
         GotResult?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void CancelList()
+    {
+        if (Results.Count > 0)
+        {
+            Results.Pop();
+            Result = Results.Pop();
+            RaiseEvent();
+        }
     }
 
 }
